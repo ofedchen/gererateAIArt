@@ -22,116 +22,119 @@
                 <h3>Pick a style for your art</h3>
                 <ul>
                     <li>
-                        <input type="checkbox" id="renaissance" class="style-picker" value=" renaissance "/>
+                        <input type="checkbox" id="renaissance" class="style-picker" value=" renaissance" />
                         <label for="renaissance">
                             <img src="/assets/renaissance.png" alt="renaissance" />
                             <div class="text-overlay">
-                                <h4>Renaissance</h4>
+                                <h5>Renaissance</h5>
                             </div>
                         </label>
                     </li>
                     <li>
-                        <input type="checkbox" id="impressionism" class="style-picker" value=" impressionism "/>
+                        <input type="checkbox" id="impressionism" class="style-picker" value=" impressionism" />
                         <label for="impressionism">
                             <img src="/assets/impressionism.png" alt="impressionism" />
                             <div class="text-overlay">
-                                <h4>Impressionism</h4>
+                                <h5>Impressionism</h5>
                             </div>
                         </label>
                     </li>
                     <li>
-                        <input type="checkbox" id="primitivism" class="style-picker" value=" primitivism "/>
-                        <label for="primitivism">
-                            <img src="/assets/primitivism.png" alt="primitivism" />
-                            <div class="text-overlay">
-                                <h4>Primitivism</h4>
-                            </div>
+                        <input type="checkbox" id="primitivism" class="style-picker" value=" primitivism" />
+                        <label for=" primitivism">
+                        <img src="/assets/primitivism.png" alt="primitivism" />
+                        <div class="text-overlay">
+                            <h5>Primitivism</h5>
+                        </div>
                         </label>
                     </li>
                     <li>
-                        <input type="checkbox" id="expressionism" class="style-picker" value=" expressionism "/>
+                        <input type="checkbox" id="expressionism" class="style-picker" value=" expressionism" />
                         <label for="expressionism">
                             <img src="/assets/expressionism.png" alt="expressionism" />
                             <div class="text-overlay">
-                                <h4>Expressionism</h4>
+                                <h5>Expressionism</h5>
                             </div>
                         </label>
                     </li>
                     <li>
-                        <input type="checkbox" id="futurism" class="style-picker" value=" futurism "/>
+                        <input type="checkbox" id="futurism" class="style-picker" value=" futurism" />
                         <label for="futurism">
                             <img src="/assets/futurism.png" alt="futurism" />
                             <div class="text-overlay">
-                                <h4>Futurism</h4>
+                                <h5>Futurism</h5>
                             </div>
                         </label>
                     </li>
                     <li>
-                        <input type="checkbox" id="pop-art" class="style-picker" value=" pop-art "/>
+                        <input type="checkbox" id="pop-art" class="style-picker" value=" pop-art" />
                         <label for="pop-art">
                             <img src="/assets/pop-art.png" alt="pop-art" />
                             <div class="text-overlay">
-                                <h4>Pop-art</h4>
+                                <h5>Pop-art</h5>
                             </div>
                         </label>
                     </li>
                     <li>
-                        <input type="checkbox" id="abstract" class="style-picker" value=" abstract " />
+                        <input type="checkbox" id="abstract" class="style-picker" value=" abstract" />
                         <label for="abstract">
                             <img src="/assets/abstract.png" alt="abstract" />
                             <div class="text-overlay">
-                                <h4>Abstract</h4>
+                                <h5>Abstract</h5>
                             </div>
                         </label>
                     </li>
                     <li>
-                        <input type="checkbox" id="street-art" class="style-picker" value=" street-art "/>
+                        <input type="checkbox" id="street-art" class="style-picker" value=" street-art" />
                         <label for="street-art">
                             <img src="/assets/street-art.png" alt="street-art" />
                             <div class="text-overlay">
-                                <h4>Street-art</h4>
+                                <h5>Street-art</h5>
                             </div>
                         </label>
                     </li>
                     <li>
-                        <input type="checkbox" id="minimalism" class="style-picker" value=" minimalism "/>
+                        <input type="checkbox" id="minimalism" class="style-picker" value=" minimalism" />
                         <label for="minimalism">
                             <img src="/assets/minimalism.png" alt="minimalism" />
                             <div class="text-overlay">
-                                <h4>Minimalism</h4>
+                                <h5>Minimalism</h5>
                             </div>
                         </label>
                     </li>
                     <li>
-                        <input type="checkbox" id="photography" class="style-picker" value=" photography "/>
+                        <input type="checkbox" id="photography" class="style-picker" value=" photography" />
                         <label for="photography">
                             <img src="/assets/photography.png" alt="photography" />
                             <div class="text-overlay">
-                                <h4>Photography</h4>
+                                <h5>Photography</h5>
                             </div>
                         </label>
                     </li>
                     <li>
-                        <input type="checkbox" id="vaporwave" class="style-picker" value=" vaporwave "/>
+                        <input type="checkbox" id="vaporwave" class="style-picker" value=" vaporwave" />
                         <label for="vaporwave">
                             <img src="/assets/vaporwave.png" alt="vaporwave" />
                             <div class="text-overlay">
-                                <h4>Vaporwave</h4>
+                                <h5>Vaporwave</h5>
                             </div>
                         </label>
                     </li>
                 </ul>
                 <button id="generate" type="submit">Generate</button>
             </form>
-            <p id="promptText"></p>
-            <h2>Generating...</h2>
-            <button id="create-new">Create new</button>
-            <button><a href="" download>Download<i class="fa fa-download"></i></a></button>
+            <div class="wrapper">
+                <p id="promptText"></p>
+                <h2 id="gen-animation">Generating...</h2>
+                <button id="create-new">Create new</button>
+                <button id="download"><a href="" download target="_blank">Download <i
+                            class="fa fa-download"></i></a></button>
+            </div>
         </section>
     </main>
 
     <script src="index.js"></script>
-    
+
 </body>
 
 </html>
