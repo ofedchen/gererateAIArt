@@ -12,11 +12,12 @@ input.addEventListener("input", onInput);
 
 function onInput(e) {
     log.textContent = e.target.value;
+    document.getElementById("generate").removeAttribute("disabled")
 }
 
-const checkboxes = document.querySelectorAll("input")
+const checkboxes = document.querySelectorAll("input[type='checkbox']")
 for (const checkbox of checkboxes) {
-    checkbox.addEventListener("click", checkedValue);
+    checkbox.addEventListener("input", checkedValue);
 }
 
 function checkedValue(e) {
@@ -25,7 +26,7 @@ function checkedValue(e) {
 }
 
 function createRequest(style) {
-    let description = log.textContent
+    let description = input.value
     let uRequest = "Create an image according to this request: " + description + " in style:" + style
     console.log(description)
     console.log(uRequest)
@@ -33,7 +34,6 @@ function createRequest(style) {
 }
 
 function generateArt(uRequest) {
-    console.log(uRequest)
     fetch('https://api.openai.com/v1/images/generations', {
         body: JSON.stringify({
             prompt: uRequest,
@@ -60,8 +60,7 @@ function generateArt(uRequest) {
     })
 }
 
-document.getElementById("generate").addEventListener("click", (event) => {
-    event.preventDefault();
+document.querySelector("form").addEventListener("submit", (event) => {
     let userRequest = createRequest(artStyle)
     generateArt(userRequest)
     form.style.display = "none"
@@ -70,6 +69,8 @@ document.getElementById("generate").addEventListener("click", (event) => {
     styleOnPage.textContent = `Chosen style: ${artStyle}`
     wrapper.insertBefore(styleOnPage, buttonCreateNew)
     styleOnPage.style.display = "block"
+    artStyle = ""
+    event.preventDefault();
 })
 
 buttonCreateNew.addEventListener("click", () => { window.location.reload() })
