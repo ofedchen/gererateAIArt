@@ -1,0 +1,25 @@
+{
+  "name": "generateaiart",
+  "version": "1.0.0",
+  "description": "a one-page website that generates a picture according to the prompt and the chosen art style, using Dall-E-3",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/ofedchen/generateaiart.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://bitbucket.org/ofedchen/generateaiart/issues"
+  },
+  "homepage": "https://bitbucket.org/ofedchen/generateaiart#readme",
+  "dependencies": {
+    "@azure/identity": "^4.5.0",
+    "@azure/keyvault-secrets": "^4.9.0",
+    "dotenv": "^16.4.7"
+  }
+}

@@ -1,3 +1,8 @@
+require('dotenv').config()
+const process = require('node:process')
+const apiKey = process.env.OPENAI_API_KEY;
+console.log(apiKey);
+
 let artStyle = ""
 const input = document.querySelector("textarea");
 const log = document.getElementById("promptText");
@@ -44,6 +49,8 @@ function generateArt(uRequest) {
             style: "vivid"
         }),
         headers: {
+            'Authorization': `Bearer ${apiKey}`,
+
             'Content-Type': 'application/json'
         },
         method: 'POST'
