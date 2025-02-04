@@ -1,6 +1,7 @@
 {
   "name": "generateaiart",
   "version": "1.0.0",
+  "type": "module",
   "description": "a one-page website that generates a picture according to the prompt and the chosen art style, using Dall-E-3",
   "main": "index.js",
   "scripts": {

@@ -6,6 +6,7 @@
 # Node artifact files
 node_modules/
 dist/
+key-vault-node-app/
 
 # Compiled Java class files
 *.class

@@ -1,7 +1,7 @@
-require('dotenv').config()
-const process = require('node:process')
-const apiKey = process.env.OPENAI_API_KEY;
-console.log(apiKey);
+// const dotenv = require('dotenv').config()
+// const process = require('node:process')
+// const apiKey = process.env.OPENAI_API_KEY;
+
 
 let artStyle = ""
 const input = document.querySelector("textarea");
@@ -81,4 +81,5 @@ document.querySelector("form").addEventListener("submit", (event) => {
 })
 
 buttonCreateNew.addEventListener("click", () => { window.location.reload() })
+
 
