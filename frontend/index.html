@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create your AI Art</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <h1>Create your own art with AI</h1>
+    <main>
+        <!-- <div class="frame"> -->
+            <img id="art" src="assets/your art will appear here (1).png" alt="created art">
+        <!-- </div> -->
+        <section>
+            <form action="#" method="get">
+                <textarea name="prompt" id="userPrompt" 
+                    placeholder="Describe a picture/visual art you would like to create, e.g.: a cat on a unicycle"></textarea>
+                <h3>Pick a style for your art</h3>
+                <ul>
+                    <li>
+                        <input type="checkbox" id="renaissance" class="style-picker" value=" renaissance" />
+                        <label for="renaissance">
+                            <img src="./assets/renaissance.png" alt="renaissance" />
+                            <div class="text-overlay">
+                                <h5>Renaissance</h5>
+                            </div>
+                        </label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="impressionism" class="style-picker" value=" impressionism" />
+                        <label for="impressionism">
+                            <img src="./assets/impressionism.png" alt="impressionism" />
+                            <div class="text-overlay">
+                                <h5>Impressionism</h5>
+                            </div>
+                        </label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="primitivism" class="style-picker" value=" primitivism" />
+                        <label for="primitivism">
+                        <img src="./assets/primitivism.png" alt="primitivism" />
+                        <div class="text-overlay">
+                            <h5>Primitivism</h5>
+                        </div>
+                        </label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="expressionism" class="style-picker" value=" expressionism" />
+                        <label for="expressionism">
+                            <img src="./assets/expressionism.png" alt="expressionism" />
+                            <div class="text-overlay">
+                                <h5>Expressionism</h5>
+                            </div>
+                        </label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="futurism" class="style-picker" value=" futurism" />
+                        <label for="futurism">
+                            <img src="./assets/futurism.png" alt="futurism" />
+                            <div class="text-overlay">
+                                <h5>Futurism</h5>
+                            </div>
+                        </label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="pop-art" class="style-picker" value=" pop-art" />
+                        <label for="pop-art">
+                            <img src="./assets/pop-art.png" alt="pop-art" />
+                            <div class="text-overlay">
+                                <h5>Pop-art</h5>
+                            </div>
+                        </label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="abstract" class="style-picker" value=" abstract" />
+                        <label for="abstract">
+                            <img src="./assets/abstract.png" alt="abstract" />
+                            <div class="text-overlay">
+                                <h5>Abstract</h5>
+                            </div>
+                        </label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="street-art" class="style-picker" value=" street-art" />
+                        <label for="street-art">
+                            <img src="./assets/street-art.png" alt="street-art" />
+                            <div class="text-overlay">
+                                <h5>Street-art</h5>
+                            </div>
+                        </label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="minimalism" class="style-picker" value=" minimalism" />
+                        <label for="minimalism">
+                            <img src="./assets/minimalism.png" alt="minimalism" />
+                            <div class="text-overlay">
+                                <h5>Minimalism</h5>
+                            </div>
+                        </label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="photography" class="style-picker" value=" photography" />
+                        <label for="photography">
+                            <img src="./assets/photography.png" alt="photography" />
+                            <div class="text-overlay">
+                                <h5>Photography</h5>
+                            </div>
+                        </label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="vaporwave" class="style-picker" value=" vaporwave" />
+                        <label for="vaporwave">
+                            <img src="./assets/vaporwave.png" alt="vaporwave" />
+                            <div class="text-overlay">
+                                <h5>Vaporwave</h5>
+                            </div>
+                        </label>
+                    </li>
+                </ul>
+                <button id="generate" type="submit" disabled>Generate</button>
+            </form>
+            <div class="wrapper">
+                <p id="promptText"></p>
+                <h2 id="gen-animation">Generating...</h2>
+                <button id="create-new">Create new</button>
+                <button id="download"><a href="" download target="_blank">Download <i
+                            class="fa fa-download"></i></a></button>
+            </div>
+        </section>
+    </main>
+
+    <script src="index.js"></script>
+
+</body>
+
+</html>
