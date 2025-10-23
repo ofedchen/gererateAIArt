@@ -14,24 +14,55 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(path.resolve(), "../frontend")))
 
-// const client = new Client({
-//     connectionString: process.env.PGURI
-// })
+const client = new Client({
+    connectionString: process.env.PGURI
+})
 
-// client.connect()
+client.connect()
 
-// app.get('/api', async (_request, response) => {
-//     const { rows } = await client.query(
-//         'SELECT * FROM savedArt'
-//     )
+app.get('/api', async (_request, response) => {
+    try {
+        const { rows } = await client.query(
+            'SELECT * FROM savedArt ORDER BY created_at DESC'
+        );
+        response.json(rows);
+    } catch (error) {
+        console.error('Database error:', error);
+        response.status(500).json({
+            error: 'Failed to fetch gallery',
+            message: error.message
+        });
+    }
+});
 
-//     response.send(rows)
-// })
+app.post('/api', async (request, response) => {
+    try {
+        const { description, style, imageUrl } = request.body;
+        const dateCreated = Date.now();
+
+        const text = `INSERT INTO savedArt(prompt, artStyle, imageUrl, dateCreated)
+            VALUES ($1, $2, $3, $4)`;
+        const values = [description, style, imageUrl, dateCreated];
+
+        const result = await client.query(text, values);
+
+        response.json({
+            success: true,
+            message: 'Art saved successfully'
+        });
+    } catch (error) {
+        console.error('Database error:', error);
+        response.status(500).json({
+            error: 'Internal server error',
+            message: error.message
+        });
+    }
+});
 
 app.post('/api/generate-image', async (request, response) => {
     try {
         const { prompt } = request.body;
-        
+
         if (!prompt) {
             return response.status(400).json({ error: 'Prompt is required' });
         }
@@ -54,8 +85,8 @@ app.post('/api/generate-image', async (request, response) => {
 
         if (!openaiResponse.ok) {
             const error = await openaiResponse.json();
-            return response.status(openaiResponse.status).json({ 
-                error: error.error?.message || 'Failed to generate image' 
+            return response.status(openaiResponse.status).json({
+                error: error.error?.message || 'Failed to generate image'
             });
         }
 
@@ -68,9 +99,9 @@ app.post('/api/generate-image', async (request, response) => {
 
     } catch (error) {
         console.error('Error generating image:', error);
-        response.status(500).json({ 
+        response.status(500).json({
             error: 'Internal server error',
-            message: error.message 
+            message: error.message
         });
     }
 });

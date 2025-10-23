@@ -1,4 +1,4 @@
-let artStyle = ""
+let artStyle = []
 const input = document.querySelector("textarea");
 const log = document.getElementById("promptText");
 const styleOnPage = document.createElement("h4")
@@ -21,19 +21,25 @@ for (const checkbox of checkboxes) {
 }
 
 function checkedValue(e) {
-    artStyle += e.target.value
-    console.log(artStyle)
+    if (e.target.checked) {
+        if (!artStyle.includes(e.target.value)) {
+            artStyle.push(e.target.value);
+        }
+    } else {
+        artStyle = artStyle.filter(style => style !== e.target.value);
+    }
+    console.log(artStyle);
 }
 
 function createRequest(style) {
-    let description = input.value
-    let uRequest = "Create an image according to this request: " + description + " in style:" + style
-    console.log(description)
-    console.log(uRequest)
-    return uRequest
+    let description = input.value;
+    let uRequest = "Create an image according to this request: " + description + " in style: " + style;
+    console.log(description);
+    console.log(uRequest);
+    return uRequest;
 }
 
-function generateArt(uRequest) {
+function generateArt(uRequest, style) {
     fetch('/api/generate-image', {
         method: 'POST',
         headers: {
@@ -43,40 +49,68 @@ function generateArt(uRequest) {
             prompt: uRequest
         })
     })
-    .then(response => response.json())
-    .then(result => {
-        if (result.success) {
-            let userArt = document.querySelector("img")
-            userArt.setAttribute("src", result.imageUrl)
-            let download = document.querySelector("a")
-            download.setAttribute("href", result.imageUrl)
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                let userArt = document.querySelector("img");
+                userArt.setAttribute("src", result.imageUrl);
+                let download = document.querySelector("#download");
+                download.setAttribute("href", result.imageUrl);
+                sendArtToDb(input.value, style, result.imageUrl);
 
-            animatedH2.style.display = "none"
-            buttonCreateNew.style.display = "block"
-            buttonDownload.style.display = "block"
-        } else {
-            console.error('Error:', result.error)
-            alert('Error generating image: ' + result.error)
-        }
+                animatedH2.style.display = "none";
+                buttonCreateNew.style.display = "block";
+                buttonDownload.style.display = "block";
+            } else {
+                console.error('Error:', result.error);
+                alert('Error generating image: ' + result.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error generating image: ' + error.message);
+        });
+}
+
+function sendArtToDb(description, style, imageUrl) {
+    fetch('/api', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            description, style, imageUrl
+        })
     })
-    .catch(error => {
-        console.error('Error:', error)
-        alert('Error generating image: ' + error.message)
-    })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                console.log('Art saved to database!');
+            } else {
+                console.error('Failed to save:', result.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error saving art: ' + error.message);
+        });
 }
 
 document.querySelector("form").addEventListener("submit", (event) => {
-    let userRequest = createRequest(artStyle)
-    generateArt(userRequest)
-    form.style.display = "none"
-    log.style.display = "block"
-    animatedH2.style.display = "block"
-    styleOnPage.textContent = `Chosen style: ${artStyle}`
-    wrapper.insertBefore(styleOnPage, buttonCreateNew)
-    styleOnPage.style.display = "block"
-    artStyle = ""
+    let styleString = artStyle.join(", ");
+    let userRequest = createRequest(styleString);
+    generateArt(userRequest, styleString);
+
+    form.style.display = "none";
+    log.style.display = "block";
+    animatedH2.style.display = "block";
+    styleOnPage.textContent = `Chosen style: ${styleString}`;
+    wrapper.insertBefore(styleOnPage, buttonCreateNew);
+    styleOnPage.style.display = "block";
+
+    artStyle = [];
     event.preventDefault();
-})
+});
 
 buttonCreateNew.addEventListener("click", () => { window.location.reload() })
 
