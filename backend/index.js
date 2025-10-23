@@ -23,7 +23,7 @@ client.connect()
 app.get('/api', async (_request, response) => {
     try {
         const { rows } = await client.query(
-            'SELECT * FROM savedArt ORDER BY created_at DESC'
+            'SELECT * FROM savedart ORDER BY created_at DESC'
         );
         response.json(rows);
     } catch (error) {
@@ -40,7 +40,7 @@ app.post('/api', async (request, response) => {
         const { description, style, imageUrl } = request.body;
         const dateCreated = Date.now();
 
-        const text = `INSERT INTO savedArt(prompt, artStyle, imageUrl, dateCreated)
+        const text = `INSERT INTO savedart(prompt, artStyle, imageUrl, dateCreated)
             VALUES ($1, $2, $3, $4)`;
         const values = [description, style, imageUrl, dateCreated];
 
