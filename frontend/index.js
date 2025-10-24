@@ -54,7 +54,7 @@ function generateArt(uRequest, style) {
             if (result.success) {
                 let userArt = document.querySelector("img");
                 userArt.setAttribute("src", result.imageUrl);
-                let download = document.querySelector("#download");
+                let download = document.querySelector("#download-link");
                 download.setAttribute("href", result.imageUrl);
                 sendArtToDb(input.value, style, result.imageUrl);
 

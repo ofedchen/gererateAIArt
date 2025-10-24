@@ -2,6 +2,7 @@ import express from "express";
 import path from "path";
 import dotenv from "dotenv";
 import { Client } from "pg";
+import { createClient } from '@supabase/supabase-js';
 import cors from "cors";
 
 dotenv.config();
@@ -10,22 +11,27 @@ const app = express();
 const port = process.env.PORT || 3000;
 const apiKey = process.env.API_TOKEN;
 
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_ANON_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+const client = new Client({
+    connectionString: process.env.PGURI,
+    ssl: {
+        rejectUnauthorized: false
+    }
+})
+
+client.connect();
+
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(path.resolve(), "../frontend")))
 
-const client = new Client({
-    connectionString: process.env.PGURI
-})
-
-client.connect()
-
 app.get('/api', async (_request, response) => {
     try {
-        const { rows } = await client.query(
-            'SELECT * FROM savedart ORDER BY created_at DESC'
-        );
-        response.json(rows);
+        const result = await client.query('SELECT * FROM savedart ORDER BY created_at DESC');
+        response.json(result.rows);
     } catch (error) {
         console.error('Database error:', error);
         response.status(500).json({
@@ -38,17 +44,17 @@ app.get('/api', async (_request, response) => {
 app.post('/api', async (request, response) => {
     try {
         const { description, style, imageUrl } = request.body;
-        const dateCreated = Date.now();
 
-        const text = `INSERT INTO savedart(prompt, artStyle, imageUrl, dateCreated)
-            VALUES ($1, $2, $3, $4)`;
-        const values = [description, style, imageUrl, dateCreated];
+        const text = `INSERT INTO savedart(prompt, artstyle, imageurl, created_at)
+            VALUES ($1, $2, $3, NOW()) RETURNING *`;
+        const values = [description, style, imageUrl];
 
         const result = await client.query(text, values);
 
         response.json({
             success: true,
-            message: 'Art saved successfully'
+            message: 'Art saved successfully',
+            data: result.rows[0]
         });
     } catch (error) {
         console.error('Database error:', error);
@@ -91,11 +97,59 @@ app.post('/api/generate-image', async (request, response) => {
         }
 
         const result = await openaiResponse.json();
+        const imageUrl = result.data[0].url;
 
-        response.json({
-            success: true,
-            imageUrl: result.data[0].url
-        });
+        // Download and upload image to Supabase Storage
+        try {
+            console.log('Downloading image from OpenAI...');
+            const imageResponse = await fetch(imageUrl);
+
+            if (!imageResponse.ok) {
+                throw new Error(`Failed to download image: ${imageResponse.status}`);
+            }
+
+            const imageBlob = await imageResponse.blob();
+            console.log('Image downloaded, size:', imageBlob.size, 'bytes');
+
+            const fileName = `art_${Date.now()}_${Math.random().toString(36).substring(7)}.png`;
+            console.log('Uploading to Supabase as:', fileName);
+
+            // Use Supabase client instead of direct API
+            const { data, error } = await supabase.storage
+                .from('art-images')
+                .upload(fileName, imageBlob, {
+                    contentType: 'image/png',
+                    upsert: true
+                });
+
+            if (error) {
+                console.error('Supabase upload error:', error);
+                throw error;
+            }
+
+            console.log('Upload successful:', data);
+
+            // Get public URL
+            const { data: { publicUrl } } = supabase.storage
+                .from('art-images')
+                .getPublicUrl(fileName);
+
+            console.log('Public URL:', publicUrl);
+
+            response.json({
+                success: true,
+                imageUrl: publicUrl,
+                originalUrl: imageUrl
+            });
+
+        } catch (storageError) {
+            console.error('Storage error:', storageError);
+            response.json({
+                success: true,
+                imageUrl: imageUrl,
+                storageError: storageError.message
+            });
+        }
 
     } catch (error) {
         console.error('Error generating image:', error);
