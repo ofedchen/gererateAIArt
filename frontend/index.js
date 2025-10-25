@@ -1,12 +1,14 @@
 let artStyle = []
 const input = document.querySelector("textarea");
 const log = document.getElementById("promptText");
-const styleOnPage = document.createElement("h4")
-const wrapper = document.querySelector(".wrapper")
-const form = document.querySelector("form")
-const buttonDownload = document.getElementById("download")
-const buttonCreateNew = document.getElementById("create-new")
-const animatedH2 = document.getElementById("gen-animation")
+const styleOnPage = document.createElement("h4");
+const wrapper = document.querySelector(".wrapper");
+const form = document.querySelector("form");
+const buttonDownload = document.getElementById("download");
+const buttonCreateNew = document.getElementById("create-new");
+const buttonTryAgain = document.getElementById("try-again");
+const animatedH2 = document.getElementById("gen-animation");
+const errorMessage = document.getElementById("error");
 
 input.addEventListener("input", onInput);
 
@@ -40,10 +42,10 @@ function createRequest(style) {
 }
 
 function generateArt(uRequest, style) {
-    fetch('/api/generate-image', {
-        method: 'POST',
+    fetch("/api/generate-image", {
+        method: "POST",
         headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json"
         },
         body: JSON.stringify({
             prompt: uRequest
@@ -62,21 +64,22 @@ function generateArt(uRequest, style) {
                 buttonCreateNew.style.display = "block";
                 buttonDownload.style.display = "block";
             } else {
-                console.error('Error:', result.error);
-                alert('Error generating image: ' + result.error);
+                console.error("Error:", result.error);
+                errorMessage.style.display = "block";
+                buttonTryAgain.style.display = "block";
             }
         })
         .catch(error => {
-            console.error('Error:', error);
-            alert('Error generating image: ' + error.message);
+            console.error("Error:", error);
+            alert("Error generating image: " + error.message);
         });
 }
 
 function sendArtToDb(description, style, imageUrl) {
-    fetch('/api', {
-        method: 'POST',
+    fetch("/api", {
+        method: "POST",
         headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json"
         },
         body: JSON.stringify({
             description, style, imageUrl
@@ -85,14 +88,14 @@ function sendArtToDb(description, style, imageUrl) {
         .then(response => response.json())
         .then(result => {
             if (result.success) {
-                console.log('Art saved to database!');
+                console.log("Art saved to database!");
             } else {
-                console.error('Failed to save:', result.error);
+                console.error("Failed to save:", result.error);
             }
         })
         .catch(error => {
-            console.error('Error:', error);
-            alert('Error saving art: ' + error.message);
+            console.error("Error:", error);
+            alert("Error saving art: " + error.message);
         });
 }
 
