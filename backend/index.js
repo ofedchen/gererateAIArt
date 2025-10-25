@@ -11,6 +11,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 const apiKey = process.env.API_TOKEN;
 
+//setup necessary to save generated images to storage to get a permanent link for db
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
@@ -46,7 +47,7 @@ app.post('/api', async (request, response) => {
         const { description, style, imageUrl } = request.body;
 
         const text = `INSERT INTO savedart(prompt, artstyle, imageurl, created_at)
-            VALUES ($1, $2, $3, NOW()) RETURNING *`;
+            VALUES ($1, $2, $3, NOW())`;
         const values = [description, style, imageUrl];
 
         const result = await client.query(text, values);
@@ -54,7 +55,6 @@ app.post('/api', async (request, response) => {
         response.json({
             success: true,
             message: 'Art saved successfully',
-            data: result.rows[0]
         });
     } catch (error) {
         console.error('Database error:', error);
@@ -101,7 +101,6 @@ app.post('/api/generate-image', async (request, response) => {
 
         // Download and upload image to Supabase Storage
         try {
-            console.log('Downloading image from OpenAI...');
             const imageResponse = await fetch(imageUrl);
 
             if (!imageResponse.ok) {
@@ -114,7 +113,6 @@ app.post('/api/generate-image', async (request, response) => {
             const fileName = `art_${Date.now()}_${Math.random().toString(36).substring(7)}.png`;
             console.log('Uploading to Supabase as:', fileName);
 
-            // Use Supabase client instead of direct API
             const { data, error } = await supabase.storage
                 .from('art-images')
                 .upload(fileName, imageBlob, {
@@ -144,9 +142,8 @@ app.post('/api/generate-image', async (request, response) => {
 
         } catch (storageError) {
             console.error('Storage error:', storageError);
-            response.json({
-                success: true,
-                imageUrl: imageUrl,
+            response.status(500).json({
+                error: 'Storage upload failed',
                 storageError: storageError.message
             });
         }
