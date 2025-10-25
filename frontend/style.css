@@ -352,9 +352,17 @@ button:active {
 }
 
 @media (max-width: 924px) {
+
+  nav a {
+  margin-right: 1rem;
+  font-size: 1.2em;
+}
+
   main {
     grid-template: 0.3fr 1.2fr / 1fr;
     justify-items: center;
+    padding-inline: 16px;
+    padding-right: 0;
   }
 
   textarea {
