@@ -54,6 +54,8 @@ labb1/
 
 1. Click "view gallery" in the navigation
 2. Browse all previously generated artwork
+
+Features planned:
 3. Click on any image to view it in full size
 4. Download images directly from the modal
 
