@@ -201,7 +201,8 @@ a {
 }
 
 #generate,
-#create-new {
+#create-new, 
+#try-again {
   background-image: linear-gradient(#d46477, #b60742);
 }
 

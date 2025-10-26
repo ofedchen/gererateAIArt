@@ -65,6 +65,7 @@ function generateArt(uRequest, style) {
                 buttonDownload.style.display = "block";
             } else {
                 console.error("Error:", result.error);
+                animatedH2.style.display = "none";
                 errorMessage.style.display = "block";
                 buttonTryAgain.style.display = "block";
             }
