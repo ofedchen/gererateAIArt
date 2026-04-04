@@ -1,26 +1,22 @@
 import express from "express";
 import path from "path";
+import fs from "fs";
 import dotenv from "dotenv";
 import { Client } from "pg";
-import { createClient } from '@supabase/supabase-js';
+import { GoogleGenAI } from "@google/genai";
 import cors from "cors";
 
 dotenv.config();
-
 const app = express();
 const port = process.env.PORT || 3000;
-const apiKey = process.env.API_TOKEN;
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-//setup necessary to save generated images to storage to get a permanent link for db
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
+const uploadsDir = path.join(path.resolve(), "uploads");
+fs.mkdirSync(uploadsDir, { recursive: true });
 
 const client = new Client({
     connectionString: process.env.PGURI,
-    ssl: {
-        rejectUnauthorized: false
-    }
+    ...(process.env.PGSSL === "true" && { ssl: { rejectUnauthorized: false } }),
 })
 
 client.connect();
@@ -28,6 +24,7 @@ client.connect();
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(path.resolve(), "../frontend")))
+app.use("/uploads", express.static(uploadsDir));
 
 app.get('/api', async (_request, response) => {
     try {
@@ -73,85 +70,46 @@ app.post('/api/generate-image', async (request, response) => {
             return response.status(400).json({ error: 'Prompt is required' });
         }
 
-        const openaiResponse = await fetch('https://api.openai.com/v1/images/generations', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`
+        const result = await ai.models.generateContent({
+            model: "gemini-3.1-flash-image-preview",
+            contents: prompt,
+            config: {
+                thinkingConfig: {
+                    thinkingLevel: "low",
+                },
+                imageConfig: {
+                    aspectRatio: "1:1",
+                    imageSize: "1K"
+                }
             },
-            body: JSON.stringify({
-                prompt: prompt,
-                model: "dall-e-3",
-                n: 1,
-                size: "1024x1024",
-                response_format: "url",
-                style: "vivid"
-            })
         });
 
-        if (!openaiResponse.ok) {
-            const error = await openaiResponse.json();
-            return response.status(openaiResponse.status).json({
-                error: error.error?.message || 'Failed to generate image'
+        const imagePart = result.candidates?.[0]?.content?.parts?.find(
+            (p) => p.inlineData
+        );
+
+        if (!imagePart) {
+            return response.status(500).json({
+                error: "No image was generated. The model may have refused the prompt."
             });
         }
 
-        const result = await openaiResponse.json();
-        const imageUrl = result.data[0].url;
+        const randomId = typeof crypto?.randomUUID === "function"
+            ? crypto.randomUUID().slice(0, 7)
+            : Math.random().toString(36).substring(7);
+        const fileName = `art_${Date.now()}_${randomId}.png`;
+        const filePath = path.join(uploadsDir, fileName);
+        fs.writeFileSync(filePath, Buffer.from(imagePart.inlineData.data, "base64"));
 
-        // Download and upload image to Supabase Storage
-        try {
-            const imageResponse = await fetch(imageUrl);
-
-            if (!imageResponse.ok) {
-                throw new Error(`Failed to download image: ${imageResponse.status}`);
-            }
-
-            const imageBlob = await imageResponse.blob();
-            console.log('Image downloaded, size:', imageBlob.size, 'bytes');
-
-            const fileName = `art_${Date.now()}_${Math.random().toString(36).substring(7)}.png`;
-            console.log('Uploading to Supabase as:', fileName);
-
-            const { data, error } = await supabase.storage
-                .from('art-images')
-                .upload(fileName, imageBlob, {
-                    contentType: 'image/png',
-                    upsert: true
-                });
-
-            if (error) {
-                console.error('Supabase upload error:', error);
-                throw error;
-            }
-
-            console.log('Upload successful:', data);
-
-            // Get public URL
-            const { data: { publicUrl } } = supabase.storage
-                .from('art-images')
-                .getPublicUrl(fileName);
-
-            console.log('Public URL:', publicUrl);
-
-            response.json({
-                success: true,
-                imageUrl: publicUrl,
-                originalUrl: imageUrl
-            });
-
-        } catch (storageError) {
-            console.error('Storage error:', storageError);
-            response.status(500).json({
-                error: 'Storage upload failed',
-                storageError: storageError.message
-            });
-        }
+        response.json({
+            success: true,
+            imageUrl: `/uploads/${fileName}`,
+        });
 
     } catch (error) {
         console.error('Error generating image:', error);
         response.status(500).json({
-            error: 'Internal server error',
+            error: 'Failed to generate image',
             message: error.message
         });
     }

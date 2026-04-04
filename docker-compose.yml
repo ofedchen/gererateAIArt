@@ -1,0 +1,20 @@
+services:
+  generateaiart:
+    image: ghcr.io/ofedchen/generateaiart:latest
+    container_name: generateaiart
+    restart: unless-stopped
+    environment:
+      - PGURI=${PGURI}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - PORT=3001
+    volumes:
+      - uploads:/app/backend/uploads
+    networks:
+      - infra_default
+
+volumes:
+  uploads:
+
+networks:
+  infra_default:
+    external: true
