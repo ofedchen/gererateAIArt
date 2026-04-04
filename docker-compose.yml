@@ -1,6 +1,6 @@
 services:
   generateaiart:
-    image: ghcr.io/ofedchen/generateaiart:latest
+    build: .
     container_name: generateaiart
     restart: unless-stopped
     environment:
