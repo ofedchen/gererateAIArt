@@ -35,7 +35,7 @@ function checkedValue(e) {
 
 function createRequest(style) {
     let description = input.value;
-    let uRequest = "Create an image according to this request: " + description + " in style: " + style;
+    let uRequest = "Create an image, subject: " + description + ", in art style: " + style;
     console.log(description);
     console.log(uRequest);
     return uRequest;
@@ -117,4 +117,5 @@ document.querySelector("form").addEventListener("submit", (event) => {
 });
 
 buttonCreateNew.addEventListener("click", () => { window.location.reload() })
+buttonTryAgain.addEventListener("click", () => { window.location.reload() })
 

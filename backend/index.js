@@ -72,11 +72,16 @@ app.post('/api/generate-image', async (request, response) => {
 
         const result = await ai.models.generateContent({
             model: "gemini-3.1-flash-image-preview",
-            contents: prompt,
+            contents: [{
+                role: "user",
+                parts: [{ text: prompt }]
+            }],
             config: {
+                responseModalities: ["IMAGE"],
                 imageConfig: {
                     aspectRatio: "1:1",
-                    imageSize: "1K"
+                    imageSize: "512",
+                    numberOfImages: 1
                 }
             },
         });

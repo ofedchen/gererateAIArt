@@ -1,14 +1,14 @@
 # AI Art Generator
 
-A web application that generates AI-powered artwork using OpenAI's DALL-E 3 API, with image storage via Supabase and database management using PostgreSQL.
+A web application that generates AI-powered artwork using Google's Gemini API, with image storage via Supabase and database management using PostgreSQL.
 
-**Live Demo**: https://gererateaiart.onrender.com
+**Live Demo**: https://gererateaiart.olha.dev
 
 ## Features
 
 - **AI Art Generation**: Create unique artwork using OpenAI's DALL-E 3 model
 - **Style Selection**: Choose from 11 different art styles (Renaissance, Impressionism, Pop-art, etc.)
-- **Persistent Storage**: Images saved to Supabase Storage for permanent links
+- **Persistent Storage**: Images saved to docker container on server for permanent links
 - **Gallery View**: Browse all generated artwork with click-to-enlarge modal
 - **Download Functionality**: Download generated images directly
 - **Responsive Design**: Mobile-friendly interface
@@ -18,27 +18,10 @@ A web application that generates AI-powered artwork using OpenAI's DALL-E 3 API,
 
 - **Frontend**: Vanilla JavaScript, HTML5, CSS3
 - **Backend**: Node.js, Express.js
-- **Database**: PostgreSQL (Render)
-- **Image Storage**: Supabase Storage
-- **AI Service**: OpenAI DALL-E 3 API
-- **Deployment**: Render
+- **Database**: PostgreSQL 
+- **AI Service**: Gemini 3.1 Flash Image
+- **Deployment**: docker on VPS
 
-## Project Structure
-
-```
-labb1/
-├── frontend/
-│   ├── index.html          # Main art generation page
-│   ├── gallery.html        # Gallery view page
-│   ├── style.css          # Styles for both pages
-│   ├── index.js           # Art generation logic
-│   ├── gallery.js         # Gallery display logic
-│   └── assets/            # Style preview images
-└── backend/
-    ├── index.js           # Express server
-    ├── package.json       # Dependencies
-    └── .env              # Environment variables
-```
 
 ## Usage
 
@@ -65,8 +48,7 @@ Features planned:
 
 - Node.js (v14 or higher)
 - PostgreSQL database (Render or local)
-- Supabase account
-- OpenAI API key
+- Paid Gemini API key
 
 ### 1. Clone and Install
 
@@ -81,10 +63,8 @@ npm install
 Create a `.env` file in the `backend` directory:
 
 ```env
-API_TOKEN=your_openai_api_key
+GEMINI_API_KEY=your_gemini_api_key
 PGURI=your_postgresql_connection_string
-SUPABASE_URL=your_supabase_project_url
-SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
 ### 3. Database Setup
@@ -101,18 +81,7 @@ CREATE TABLE savedart (
 );
 ```
 
-### 4. Supabase Storage Setup
-
-1. Create a bucket named `art-images` in Supabase Storage
-2. Make the bucket public
-3. Set up storage policies for uploads:
-
-```sql
--- Disable RLS for simple setup (or create proper policies)
-ALTER TABLE storage.objects DISABLE ROW LEVEL SECURITY;
-```
-
-### 5. Run the Application
+### 4. Run the Application
 
 ```bash
 cd backend
@@ -132,9 +101,9 @@ The application will be available at `http://localhost:3000`
 ### Backend
 - `express` - Web framework
 - `pg` - PostgreSQL client
-- `@supabase/supabase-js` - Supabase client
 - `cors` - Cross-origin resource sharing
 - `dotenv` - Environment variables
+- `ai` - GoogleGenAI
 
 ### Frontend
 - Vanilla JavaScript (no framework dependencies)
@@ -167,4 +136,4 @@ The application will be available at `http://localhost:3000`
 
 ## License
 
-This project is for educational purposes. Please ensure you comply with OpenAI's usage policies and Supabase's terms of service.
+This project is for educational purposes. 
