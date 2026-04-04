@@ -74,9 +74,6 @@ app.post('/api/generate-image', async (request, response) => {
             model: "gemini-3.1-flash-image-preview",
             contents: prompt,
             config: {
-                thinkingConfig: {
-                    thinkingLevel: "low",
-                },
                 imageConfig: {
                     aspectRatio: "1:1",
                     imageSize: "1K"
