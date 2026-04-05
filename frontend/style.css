@@ -201,7 +201,7 @@ a {
 }
 
 #generate,
-#create-new, 
+#create-new,
 #try-again {
   background-image: linear-gradient(#d46477, #b60742);
 }
@@ -354,10 +354,16 @@ button:active {
 
 @media (max-width: 924px) {
 
+  body {
+    box-sizing: border-box;
+    margin: 0;
+    padding-inline: 10px;
+  }
+
   nav a {
-  margin-right: 1rem;
-  font-size: 1.2em;
-}
+    margin-right: 1rem;
+    font-size: 1.2em;
+  }
 
   main {
     grid-template: 0.3fr 1.2fr / 1fr;
