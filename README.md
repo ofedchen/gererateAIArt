@@ -6,7 +6,7 @@ A web application that generates AI-powered artwork using Google's Gemini API, w
 
 ## Features
 
-- **AI Art Generation**: Create unique artwork using OpenAI's DALL-E 3 model
+- **AI Art Generation**: Create unique artwork using Gemini's 3.1 Flash image generating model
 - **Style Selection**: Choose from 11 different art styles (Renaissance, Impressionism, Pop-art, etc.)
 - **Persistent Storage**: Images saved to docker container on server for permanent links
 - **Gallery View**: Browse all generated artwork with click-to-enlarge modal
